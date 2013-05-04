@@ -1,0 +1,55 @@
+<ul>
+	{% for art in articulos %}
+	<article class='articulo_box' onClick='document.location="{% url "tienda_app.views.articulo" art.id %}";'>
+		<a href="#" class="titulo"> 
+			<h3>
+				{{art.nombre|capfirst}}	
+			</h3>
+		</a><!-- url al articulo -->
+		<figure>
+			<img src='{{MEDIA_URL}}{{art.imagen}}' class="img">
+		</figure>
+		<p>
+			<span class="descripcion_titulo">
+				{{art.descripcion|truncatewords:15}}
+				<a href="{% url "tienda_app.views.articulo" art.id %}" class="leer_mas">Leer más</a>
+			</span>
+			<br/><br />
+			<span class="precio">
+				BsF. {{art.precio}}
+			</span>
+			<br />
+		</p>
+	</article>
+	{% empty %}
+	<li>
+		<span class="error"> Aún no hay articulos registrados </span>
+	</li>
+	{% endfor %}
+</ul>
+<br />
+
+<div class="pagination">
+    <span class="step-links">
+    	
+		<br />
+        <span>
+        	{% if articulos.has_previous %}
+            	<a href="?page={{ articulos.previous_page_number }}">Anterior</a>
+        	{% endif %}
+        </span>
+        <span class="current">
+			{% load range_page %}
+			{% for num in articulos.paginator.num_pages|range %}
+    			<a href="?page={{ num }}">{{ num }}</a>
+			{% endfor %}
+            {% if articulos.has_next %}
+            	<a href="?page={{ articulos.next_page_number }}">Siguiente</a>
+        	{% endif %}
+        	<br />
+        </span>
+		<span>
+			Pagina {{ articulos.number }} de {{ articulos.paginator.num_pages }}.
+		</span>
+    </span>
+</div>

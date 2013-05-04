@@ -1,0 +1,141 @@
+{%extends "base.html" %} 
+{% block header %}
+	<script src="{{STATIC_URL}}js/external.js"></script>
+	<script src="{{STATIC_URL}}js/msg_jquery.js"></script>
+	<script src="{{STATIC_URL}}js/jquery.autosize.js"></script>
+	<script src="{{STATIC_URL}}js/ajax_events.js"></script>
+    <script src="{{STATIC_URL}}js/articulo.js"></script>
+{% endblock %}
+{% block javascript%}
+    <script>
+            $(function() {
+                (function(){
+                    Articulo.init({
+                        a_id: {{articulo.id}},
+                        files_config: "{{MEDIA_URL}}",
+                        csrf_tok: "{{ csrf_token }}"
+                    });
+                    Articulo.comentar("{% url 'comentar_ajax' %}");
+                    Articulo.comprar("{% url 'compra_ajax' %}?");
+                    Articulo.infinite_scroll("{% url 'load_comments' %}");
+                })();
+            });
+    </script>
+{% endblock%}
+
+{% block lista_categorias%}
+	{% load show_categories %}
+    {% load_categories %}
+{% endblock%}
+
+{% block titulo %}
+	<h2>Articulo </h2>
+{% endblock%}
+
+{% block lista_articulos%}
+	<section id="datos_articulo">
+		<section id="articulo" class="caja">
+			<a href="{{MEDIA_URL}}{{articulo.imagen}}" class="zoom">
+    			<img src="{{MEDIA_URL}}{{articulo.imagen}}" id="mi_zoom" alt="{{articulo.nombre}}" />
+			</a>
+		</section>
+		<section id="compra">
+			<h2>
+				{{articulo.nombre|title}}
+			</h2>
+			<article class="precio">
+				Precio: {{articulo.precio}} Bs.F
+			</article>
+			<br />
+			<article>
+				Cantidad disponible: {{articulo.cantidad}}
+			</article>
+			{% if articulo.cantidad > 0 %}
+				<input type="button" class="button"  value="Comprar" id="comprar"/>
+			{% else %}
+				<p class="error"> No hay disponibilidad del articulo</p>
+			{% endif %}
+		</section>
+	</section>
+	<br /><br />
+	<section>
+		<h2>Descripción</h2>
+		<p class="descripcion">
+			{{articulo.descripcion}}
+		</p>
+	</section>
+	<br /><br />
+	<section id="comentarios">
+		<article class="ui-widget">
+			<textarea id="comment" placeholder="Escriba su comentario"></textarea>
+			<br/><div id="enviandoAjax"></div><br />
+			<input type="button" id="send_comment" value="Comentar" class='button'/> 
+			
+		</article>
+		<br /><br />
+		
+		<h2>Comentarios</h2>
+		<section id="comments">
+			{% include  "tienda/comments.html"%}
+		</section>
+		<section id="new_comments">
+			
+		</section>
+		<br />
+		{% if comentarios.has_next %}
+			<input type="button" value="Mostrar más comentarios" id="load_comments"/>
+		{% endif %}
+	</section>
+	<!-- ui-dialog -->
+<div id="dialog" title="Confirmar compra:">
+
+	<article id="datos_compra">
+		<section id="popup_compra">
+			<h2> {{articulo.nombre|title}} </h2>
+			<img src="{{MEDIA_URL}}{{articulo.imagen}}" id="modal_img" alt="{{articulo.nombre}}" />
+			<span class="precio">
+				Precio: {{articulo.precio}}
+			</span>
+		</section>
+		<form action="#" id="form_compra">
+			<fieldset> 
+				<span id="text_cantidad"> Cantidad 
+					<input type="number" size="{{articulo.cantidad|stringformat:"s"|length}}" id="cantidad" name="cantidad" min="1" max="{{articulo.cantidad}}" maxlength="{{articulo.cantidad|stringformat:"s"|length}}" required>
+					de {{articulo.cantidad}} 
+				</span>
+				<br />
+				<br />
+				<button type="submit" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only button">
+					<span class="ui-button-text">Comprar</span>
+				</button>
+				<button id="cancelar" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only button">
+					<span class="ui-button-text">Cancelar</span>
+				</button>
+			</fieldset> 
+		</form>	
+		<div id="error">
+
+		</div>
+		<section id="hidden">
+			<input type="hidden" id="precio_hidden" name="precio_hidden" value="{{articulo.precio}}" readonly="readonly">
+			<input type="hidden"  id="id_hidden" name="id_hidden" value="{{articulo.id}}" readonly="readonly">
+			<input type="hidden" id="cantidad_hidden" name="cantidad_hidden" value="{{articulo.cantidad}}" readonly="readonly">
+		</section>	  
+	</article>
+</div>
+
+<div id="done-message" title="Información">
+	<span class="ui-icon ui-icon-circle-check" style="float:left; margin:0 70px 50px 0;"></span>
+    <p>
+        Se ha completado exitosamente la compra.
+    </p>
+</div>
+<div id="error-message" title="Error">
+    <p>
+        Debe ingresar un contenido.
+    </p>
+</div>
+
+
+{% endblock%}
+

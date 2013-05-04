@@ -1,0 +1,15 @@
+{% for item in comentarios %}
+	<article class="caja_comentario">
+		<p class="fecha">
+			{{item.fecha_registro|date:"M.d g:i a"}}
+		</p>
+		<p>
+			{{item.contenido}} 
+		</p>
+	</article>
+{% empty %}
+	<p>
+		Sin comentarios
+	</p>
+{% endfor %}
+

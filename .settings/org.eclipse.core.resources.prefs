@@ -1,0 +1,6 @@
+eclipse.preferences.version=1
+encoding//tienda_app/models.py=utf-8
+encoding//tienda_app/templatetags/my_filter.py=utf-8
+encoding//tienda_app/utils/format_date.py=utf-8
+encoding//tienda_app/views.py=utf-8
+encoding//tienda_web/urls.py=utf-8

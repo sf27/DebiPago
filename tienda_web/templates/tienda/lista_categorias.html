@@ -1,0 +1,13 @@
+<ul>
+	{% for cat in categorias %}
+	<li>
+		<a href="{% url "tienda_app.views.buscar_articulos" cat.nombre %}" class="links"> {{cat.nombre|capfirst}}</a>
+	</li>
+	{% empty %}
+	<li>
+		<p class="error">
+			Aún no hay categorias registradas
+		</p>
+	</li>
+	{% endfor %}
+</ul>

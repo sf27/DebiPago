@@ -1,0 +1,10 @@
+{%extends "base.html"%} 
+
+{% block lista_categorias%}
+    {% load show_categories %}
+    {% load_categories %}
+{% endblock%}
+
+{% block lista_articulos%}
+	{% include  "tienda/lista_articulos.html"%}
+{% endblock%}
